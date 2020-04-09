@@ -271,13 +271,11 @@ func (l *FATFS) OpenFile(path string, flags OpenFlag) (*File, error) {
 	var errno C.FRESULT
 	if path == "/" || info.fattrib&C.AM_DIR > 0 {
 		// directory
-		println("attempting f_opendir:", gostring(cs))
 		file.typ = uint8(C.AM_DIR)
 		file.hndl = unsafe.Pointer(C.go_fatfs_new_ff_dir())
 		errno = C.f_opendir(l.fs, (*C.FF_DIR)(file.hndl), cs)
 	} else {
 		// file
-		println("attempting f_open:", gostring(cs))
 		file.typ = 0
 		file.hndl = unsafe.Pointer(C.go_fatfs_new_fil())
 		errno = C.f_open(l.fs, (*C.FIL)(file.hndl), cs, C.BYTE(flags))
